@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Lama-Inpainting</string>
+    <string name="action_settings">Settings</string>
+    <!-- Strings used for fragments for navigation -->
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="select">Select</string>
+    <string name="go">Go</string>
+    <string name="photo">Photo</string>
+    <string name="select_photo">Select photo</string>
+    <string name="finish">Finish</string>
+    <string name="edit">Edit</string>
+    <string name="previous">Previous</string>
+    <string name="photo_url">Photo URL</string>
+
+    <string name="lorem_ipsum">
+        Textview text
+    </string>
+</resources>

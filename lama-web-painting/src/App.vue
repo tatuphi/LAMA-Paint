@@ -31,19 +31,19 @@
     </v-app-bar>
 
     <v-main>
-      <HelloWorld/>
+      <EditPhoto/>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld';
+import EditPhoto from './components/EditPhoto';
 
 export default {
   name: 'App',
 
   components: {
-    HelloWorld,
+    EditPhoto,
   },
 
   data: () => ({

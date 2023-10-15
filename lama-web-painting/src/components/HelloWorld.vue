@@ -31,7 +31,7 @@
         <div v-if="curImage==''" style="border: 1px solid green; height: 450px"></div>
         <vue-painting
         v-else
-        style="height: 600px;"
+        style="height: 500px;"
         :img="curImage"
         @saveImage="onSaveImage"
         ></vue-painting>
@@ -40,11 +40,11 @@
       <v-col class="pa-5">
         <v-row no-gutters class="mb-1 d-flex justify-space-between">
           <div>After</div>
-          <v-btn small outlined @click="downPaint()" v-if="paintImage!=''">Download</v-btn>
+          <v-btn small outlined @click="downPaint()" v-if="editedImage!=''">Download</v-btn>
           </v-row>
-          <div v-if="paintImage==''" style="border: 1px solid green; height: 450px"></div>
+          <div v-if="editedImage==''" style="border: 1px solid green; height: 450px"></div>
           <v-img v-else
-          :src="paintImage">
+          :src="editedImage">
           </v-img>
       </v-col>
     </v-row>
@@ -54,7 +54,8 @@
 </template>
 
 <script>
-import VuePainting from "vue-painting"
+import axios from "axios";
+import VuePainting from "vue-painting";
 export default {
   name: 'HelloWorld',
   components:{
@@ -68,6 +69,7 @@ export default {
       curImage: "",
       paintImage: "",
       urlImage: "",
+      editedImage: "",
     }
   },
   methods:{
@@ -75,21 +77,36 @@ export default {
       this.$refs.uploader.click()
     },
     onSaveImage (blobFile) {
-      console.log(blobFile)
-
       // upload to server to paint
       const reader = new FileReader();
         reader.onloadend = () => {
             const base64String = reader.result
-            console.log("call api here")
-            this.paintImage = base64String;
+            let dataObj = {
+              image_raw: this.curImage,
+              image_color: base64String,
+            }
+            console.log(dataObj)
+            // axios.post("https://reqres.in/invalid-url", dataObj)
+            // .then(response => this.paintImage = response.data)
+            // .catch(error => {
+            //   // this.errorMessage = error.message;
+            //   console.error("There was an error!", error);
+            // });
+
+            axios.get("https://jsonplaceholder.typicode.com/todos/1")
+            .then(response => {
+              console.log(response.data)
+            })
+            .catch(error => {
+              // this.errorMessage = error.message;
+              console.error("There was an error!", error);
+            });
         };
         reader.readAsDataURL(blobFile);
     },
     onFileChange(e){
       this.curImage = "";
       const file = e.target.files[0];
-      console.log(file)
         // Encode the file using the FileReader API
         const reader = new FileReader();
         reader.onloadend = () => {
@@ -101,25 +118,10 @@ export default {
         reader.readAsDataURL(file);
     },
     downPaint(){
-      console.log("download")
       var a = document.createElement('a')
       a.download = `painting-${+new Date}.png`
       a.href = this.paintImage
       a.click()
-    },
-    convertImageToBase64(imgUrl, callback) {
-      const image = new Image();
-      image.crossOrigin='anonymous';
-      image.onload = () => {
-        const canvas = document.createElement('canvas');
-        const ctx = canvas.getContext('2d');
-        canvas.height = image.naturalHeight;
-        canvas.width = image.naturalWidth;
-        ctx.drawImage(image, 0, 0);
-        const dataUrl = canvas.toDataURL();
-        callback && callback(dataUrl)
-      }
-      image.src = imgUrl;
     },
 
     convertImgToDataURLviaCanvas (url, callback) {
@@ -132,7 +134,9 @@ export default {
         var ctx = canvas.getContext('2d');
         var dataURL;
         canvas.height = this.height;
+        // image.naturalHeight
         canvas.width = this.width;
+        // image.naturalWidth
         ctx.drawImage(this, 0, 0);
         dataURL = canvas.toDataURL();
         callback(dataURL);

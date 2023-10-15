@@ -18,8 +18,8 @@
             <input
               type="range"
               min="1"
-              max="20"
-              value="10"
+              max="50"
+              value="25"
               class="size"
               id="sizeRange"
             />
@@ -34,7 +34,7 @@
               outlined
               @keydown.enter="convertUrl2Base64(urlImage)"
             ></v-text-field>
-            <v-btn small outlined @click="$refs.uploader.click()" class="mr-2" :disabled="isEditing">Upload</v-btn>
+            <v-btn small outlined @click="uploadImage" class="mr-2" :disabled="isEditing">Upload</v-btn>
             <v-btn small outlined id="clear" class="mr-2" :disabled="isEditing">Clear</v-btn>
             <v-btn id="edit" :disabled="isEditing" dense color="primary" style="height: 28px" elevation="0">Edit</v-btn>
           </v-row> 
@@ -118,6 +118,9 @@ export default {
       };
   },
   methods:{
+    uploadImage(){
+      this.$refs.uploader.click()
+    },
     drawOnImage(image = null) {
       const canvasElement = document.getElementById("fcanvas");
       const context = canvasElement.getContext("2d");
@@ -150,7 +153,7 @@ export default {
         formData.append('image_raw', this.convertBase64ToFile(this.curImage, "image_raw.png"));
         formData.append('image_color',  this.convertBase64ToFile(canvasElement.toDataURL('image/png'), "image_color.png"));
 
-        axios.post("http://2b7f-104-155-237-69.ngrok.io/upload-image", formData)
+        axios.post("http://d293-34-69-9-238.ngrok.io/upload-image", formData)
         .then((response)=>{
           if(response.status==200){
             this.paintImage = 

@@ -116,8 +116,24 @@ export default {
       sizeElement.oninput = (e) => {
         this.size = e.target.value;
       };
+    // this.loadPOST()
   },
   methods:{
+    loadPOST(){
+      let dataObj = {
+        judgement: "here i am"
+      }
+      axios.post("http://9145-35-193-98-61.ngrok.io/ner", dataObj)
+      .then((response)=>{
+        if(response.status==200){
+          console.log(response.data)
+        }
+      })
+      .catch(error => {
+        // this.errorMessage = error.message;
+        console.error("There was an error!", error);
+      })
+    },
     uploadImage(){
       this.$refs.uploader.click()
     },
@@ -152,13 +168,16 @@ export default {
         const formData = new FormData();
         formData.append('image_raw', this.convertBase64ToFile(this.curImage, "image_raw.png"));
         formData.append('image_color',  this.convertBase64ToFile(canvasElement.toDataURL('image/png'), "image_color.png"));
-
-        axios.post("http://d293-34-69-9-238.ngrok.io/upload-image", formData)
+        console.log(formData)
+        let jjj = {
+          'text': 'here i am'
+        }
+        axios.post("http://9145-35-193-98-61.ngrok.io/ner", jjj)
         .then((response)=>{
           if(response.status==200){
-            this.paintImage = 
-          `data:image/${response.data.format.toLowerCase()};base64,` + response.data.img;
-          console.log(this.paintImage)
+          //   this.paintImage = 
+          // `data:image/${response.data.format.toLowerCase()};base64,` + response.data.img;
+          console.log(response.data)
           }
           
         })
@@ -256,6 +275,7 @@ export default {
       img.src = url;
     },
     convertUrl2Base64(url){
+      console.log("here iam")
       this.curImage = "";
       this.convertImgToDataURLviaCanvas( url, (base64_Str)=>{
         this.curImage = base64_Str;
